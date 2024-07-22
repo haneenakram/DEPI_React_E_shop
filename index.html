@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/all.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/all.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <title><E-shop></E-shop></title>
+  </head>
+  <body>
+
+    <!-- Navabar -->
+    <div class="top bg-dark py-3 mb-5 w-100 top-0 position-fixed">
+      <div class="container d-flex">
+        <a class="navbar-brand py-3 fs-1 text-light mx-0 mx-md-5" href="#"
+          ><i class="fa-solid fa-shop text-danger"></i> E-Shop</a
+        >
+        <div class="container d-flex justify-content-end align-items-center">
+          <button class="btn position-relative" id="cart">
+            <i class="fa-solid fa-cart-shopping fs-4"></i>
+            <span
+              id="items-count"
+              class="d-none position-absolute bg-danger rounded-circle p-2 bottom-50 start-50"
+              style="line-height: 0"
+              >1</span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- cart -->
+    <div
+      class="cart-container hide position-fixed col-12 col-md-3 h-100 top-0 end-0 bg-light z-1 mh-90 overflow-y-scroll overflow-x-hidden"
+    >
+      <div
+        class="cart-header d-flex justify-content-center align-items-center p-3 bg-danger text-white fs-2 position-relative w-100"
+      >
+        <div
+          class="close top-0 start-0 position-absolute fs-4 text-light bg-danger ms-2"
+        >
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </div>
+        <h3 class="text-light border-bottom border-light">Items</h3>
+      </div>
+      <div class="d-flex justify-content-center align-items-center no-items">
+        <p>No items added to the cart yet</p>
+      </div>
+      <div class="d-none container gap-2 border bg-light p-3" id="cart-body">
+        <!--gowah hyb2a kolo-->
+        <!-- <div
+            class="d-flex border m-2 p-1 position-relative justify-content-around align-items-center">
+            <div class="remove top-0 start-0 me-5 position-absolute fs-5 bg-danger text-light p-1">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </div>
+            <div class="image w-25 me-2">
+              <img
+                class="h-100 w-100 object-fit-cover img-fluid"
+                src="img/photo3.jpg"
+                alt=""
+              />
+            </div>
+            <div class="product-content d-flex flex-column gap-2 justify-content-center align-items-center flex-wrap">
+              <h5>title</h5>
+              <p>
+                Lorem, ipsum dolor sit amet 
+              </p>
+            </div>
+            <div class="arrows row gap-2 cursor-pointer">
+              <i class="fa-solid fa-up-long"></i>
+              <i class="fa-solid fa-down-long"></i>
+            </div>
+          </div> -->
+      </div>
+    </div>
+
+    <!-- main content -->
+    <main class="container">
+      <div
+        id="loading"
+        class="d-flex vh-100 justify-content-center align-items-center"
+      >
+        <h2>Loading....</h2>
+      </div>
+      <div
+        id="error"
+        class="d-none vh-100 justify-content-center align-items-center"
+      >
+        <div class="alert alert-danger"></div>
+      </div>
+      <div id="main-content" class="d-none">
+        
+        <!-- categories side bar -->
+        <aside id="side-bar-categoris" class="col-3 ">
+          <div class="border shadow rounded-2  p-2">
+            <h3 class="pb-3 w-100 border-bottom border-black">Categories</h3>
+            <ul id="categories" class="list-unstyle px-0"></ul>
+          </div>
+        </aside>
+        <!-- products -->
+        <section class="col-9">
+          <div
+            id="loading-products"
+            class="d-flex vh-100 justify-content-center align-items-center"
+          >
+            <h2>Loading....</h2>
+          </div>
+          <div
+            id="error-products"
+            class="d-none vh-100 justify-content-center align-items-center"
+          >
+            <div class="alert alert-danger"></div>
+          </div>
+          <div id="items" class="d-none"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- scripts -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
+
+<!-- 
+<aside id="side-bar-categories" class="col-3">
+          <div class="border shadow rounded-2">sidebar</div>
+        </aside>
+        <section class="col-9">
+          <div class="row">
+            <div class="col-4">
+              <div class="border shadow rounded-2 px-1 py-2">
+                <img
+                  src="product.jpg"
+                  class="w-100 mb-2"
+                  style="height: 200px"
+                />
+                <div class="mb-3">
+                  <h3 class="mb-1">Lorem, ipsum.</h3>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing.</p>
+                </div>
+                <div class="d-flex gap-1 mb-3 align-items-center">
+                  <span class="text-warning">★</span>
+                  <div class="px-2 bg-danger bg-opacity-75 rounded-2">4.4</div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <p class="fw-bold mb-0 fs-4">$599</p>
+                  <button class="btn btn-primary">Add To Chart</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="border shadow rounded-2">2</div>
+            </div>
+            <div class="col-4">
+              <div class="border shadow rounded-2">3</div>
+            </div>
+          </div>
+        </section>
+      </div>
+-->
