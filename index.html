@@ -12,15 +12,20 @@
     <title><E-shop></E-shop></title>
   </head>
   <body>
-
-    <!-- Navabar -->
+    <!-- Navbar -->
     <div class="top bg-dark py-3 mb-5 w-100 top-0 position-fixed">
       <div class="container d-flex">
-        <a class="navbar-brand py-3 fs-1 text-light mx-0 mx-md-5" href="#"
-          ><i class="fa-solid fa-shop text-danger"></i> E-Shop</a
+        <a
+          class="navbar-brand py-3 fs-1 text-light mx-0 mx-md-5 d-none d-md-block"
+          href="#"
         >
+          <i class="fa-solid fa-shop text-danger"></i> E-Shop
+        </a>
         <div class="container d-flex justify-content-end align-items-center">
-          <button class="btn position-relative" id="cart">
+          <a class="navbar-brand d-block d-md-none ms-auto" href="#">
+            <i class="fa-solid fa-shop text-danger"></i>
+          </a>
+          <button class="btn position-relative ms-3" id="cart">
             <i class="fa-solid fa-cart-shopping fs-4"></i>
             <span
               id="items-count"
@@ -33,9 +38,13 @@
       </div>
     </div>
 
+    <div class="feedback position-fixed top-25 start-50 d-none">
+      <div class="alert alert-success" role="alert">added to cart</div>
+    </div>
+
     <!-- cart -->
     <div
-      class="cart-container hide position-fixed col-12 col-md-3 h-100 top-0 end-0 bg-light z-1 mh-90 overflow-y-scroll overflow-x-hidden"
+      class="cart-container hide position-fixed col-sm-12 col-md-3 col-12 h-100 top-0 end-0 bg-light z-1 mh-90 overflow-y-scroll overflow-x-hidden"
     >
       <div
         class="cart-header d-flex justify-content-center align-items-center p-3 bg-danger text-white fs-2 position-relative w-100"
@@ -93,10 +102,9 @@
         <div class="alert alert-danger"></div>
       </div>
       <div id="main-content" class="d-none">
-        
         <!-- categories side bar -->
-        <aside id="side-bar-categoris" class="col-3 ">
-          <div class="border shadow rounded-2  p-2">
+        <aside id="side-bar-categoris" class="col-3">
+          <div class="border shadow rounded-2 p-2">
             <h3 class="pb-3 w-100 border-bottom border-black">Categories</h3>
             <ul id="categories" class="list-unstyle px-0"></ul>
           </div>

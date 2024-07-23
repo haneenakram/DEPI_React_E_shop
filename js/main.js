@@ -8,12 +8,24 @@ const loadingProducts = $("#loading-products");
 const errorProducts = $("#error-products");
 const mainElement = $("#main-content");
 const itemsElement = $("#items");
-const cartContainer = $(".cart-container");
-var itemcount = $("#items-count");
-var counter = 0;
-var cart = [];
-var endpoint = "products/categories/smartphones";
-var handleSuccess = successCategories;
+const feedback = document.querySelector(".feedback");
+var cart = JSON.parse(localStorage.getItem("cart")) || [];
+console.log(cart);
+
+function showFeedback() {
+  // const feedback = document.querySelector(".feedback"); // Define the feedback variable
+  feedback.classList.replace("d-none", "d-block");
+  feedback.style.opacity = "1";
+
+  setTimeout(() => {
+    feedback.style.opacity = "0";
+  }, 1000); // Show for 1 second
+
+  setTimeout(() => {
+    feedback.classList.replace("d-block", "d-none");
+    feedback.style.opacity = "1"; // Reset opacity for next use
+  }, 2000); // Hide after an additional 0.5 second for the fade-out
+}
 
 $(document).ready(function () {
   $(".close").on("click", function () {
@@ -26,34 +38,121 @@ $(document).ready(function () {
   });
 });
 
-//endpoint, success, error, startLoading, stopLoading;
-//just passing the parameter to implement the logic in api.js
 handelRemoteRequest(
   "products/categories", //endpoint
-  handleSuccess, //success
-  function (err) {
-    //error
-    errorElement.removeClass("d-none");
-    errorElement.addClass("d-flex");
-    mainElement.removeClass("row");
-    mainElement.addClass("d-none");
-    errorElement.find(".alert").text(err.message);
-  },
-  function () {
-    //loading
-    loadingElement.removeClass("d-none");
-    loadingElement.addClass("d-flex");
-    // console.log("start loading categories");
-  },
-  function () {
-    //stoploading
-    loadingElement.removeClass("d-flex");
-    loadingElement.addClass("d-none");
-  }
-);
+  successCategories, //success
+  error,
+  loading,
+  stopLoading
+)
+  .then(() => {
+    handelRemoteRequest(
+      "products", //endpoint
+      successAllProducts, //success
+      errorItems,
+      loadingItemsArea,
+      stopLoadingItems
+    );
+  })
+  .then(() => {
+    inCart(cart);
+  });
 
+function loading() {
+  loadingElement.removeClass("d-none");
+  loadingElement.addClass("d-flex");
+}
+function stopLoading() {
+  loadingElement.removeClass("d-flex");
+  loadingElement.addClass("d-none");
+}
+function error(err) {
+  errorElement.removeClass("d-none");
+  errorElement.addClass("d-flex");
+  mainElement.removeClass("row");
+  mainElement.addClass("d-none");
+  errorElement.find(".alert").text(err.message);
+}
+function loadingItemsArea() {
+  loadingProducts.removeClass("d-none");
+  loadingProducts.addClass("d-flex");
+}
+function stopLoadingItems() {
+  loadingProducts.removeClass("d-flex");
+  loadingProducts.addClass("d-none");
+}
+function errorItems() {
+  //error
+  errorProducts.removeClass("d-none");
+  errorProducts.addClass("d-flex");
+  itemsElement.removeClass("row");
+  itemsElement.addClass("d-none");
+  errorProducts.find(".alert").text(err.message);
+}
 
+function successAllProducts(data) {
+  itemsElement.removeClass("d-none");
+  itemsElement.addClass("row");
+  // console.log(data);
+  itemsElement.html(
+    data.products
+      .map((item) => {
+        // console.log(item)
+        let pCart = {
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: 1,
+          total: item.price,
+          discountPercentage: item.discountPercentage,
+          discountedTotal: item.discountPercentage,
+          thumbnail: item.thumbnail,
+        };
+
+        return `<div class="col-md-4 col-sm-12">
+              <div class="border shadow rounded-2 px-3 py-2">
+                <img
+                  src="${item.thumbnail}"
+                  class="w-100 mb-2"
+                  style="height: 200px"
+                />
+                <div class="mb-3">
+                  <h4 class="mb-1 text-center">${item.title}</h4>
+
+                  <p> <b>Availability:</b> ${item.availabilityStatus}</p>
+                  <p> <b>Return policy:</b> ${item.returnPolicy}</p>
+                  <p> <b>Shipping:</b> ${item.shippingInformation}</p>
+                  <div class="prod-desc">
+                  <p><b>Description:</b> </p>
+                  <p>${item.description}</p>
+                  </div>
+                </div>
+                <div class="d-flex gap-2 mb-3 align-items-center">
+                  <span class="text-warning">★</span>
+                  <div class="px-2 bg-danger bg-opacity-75 rounded-2">${
+                    item.rating
+                  }</div>
+                </div>
+                <div class="d-flex gap-3 align-items-center">
+                  <p class="fw-bold mb-0 fs-4">${item.price}</p>
+                  <button class="btn btn-primary add" data-product='${JSON.stringify(
+                    pCart
+                  )}'>Add To Chart</button>
+                </div>
+              </div>
+            </div>`;
+      })
+      .join("")
+  );
+
+  $(".add").on("click", function () {
+    const product = JSON.parse($(this).attr("data-product"));
+    addTocart(product);
+    // showPopupNotification(product.title);
+  });
+}
 function successCategories(data) {
+  // console.log(data)
   mainElement.removeClass("d-none");
   mainElement.addClass("row");
   catgoriesContainer.html(
@@ -64,31 +163,16 @@ function successCategories(data) {
       )
       .join("")
   );
+
   data.forEach((item) => {
     $(`#${item.slug}`).on("click", function () {
-      endpoint = `products/category/${item.slug}`;
+      // endpoint = ;
       handelRemoteRequest(
-        endpoint,
+        `products/category/${item.slug}`,
         successProducts,
-        function (err) {
-          //error
-          errorProducts.removeClass("d-none");
-          errorProducts.addClass("d-flex");
-          itemsElement.removeClass("row");
-          itemsElement.addClass("d-none");
-          errorProducts.find(".alert").text(err.message);
-        },
-        function () {
-          //loading
-          loadingProducts.removeClass("d-none");
-          loadingProducts.addClass("d-flex");
-          // console.log("start loading products");
-        },
-        function () {
-          //stoploading
-          loadingProducts.removeClass("d-flex");
-          loadingProducts.addClass("d-none");
-        }
+        errorItems,
+        loadingItemsArea,
+        stopLoadingItems
       );
     });
   });
@@ -97,7 +181,7 @@ function successProducts(data) {
   itemsElement.removeClass("d-none");
   itemsElement.addClass("row");
   // console.log("seccessproduct");
-  // console.log(data.products);
+  // console.log(data);
   itemsElement.html(
     data.products
       .map((item) => {
@@ -112,7 +196,7 @@ function successProducts(data) {
           thumbnail: item.thumbnail,
         };
 
-        return `<div class="col-4">
+        return `<div class="col-md-4 col-sm-12">
               <div class="border shadow rounded-2 px-3 py-2">
                 <img
                   src="${item.thumbnail}"
@@ -163,7 +247,9 @@ function addTocart(product) {
       cart[productIndex].quantity * Number(cart[productIndex].price);
   } else {
     cart.push(product);
+    showFeedback();
   }
+  localStorage.setItem("cart", JSON.stringify(cart));
   inCart();
 }
 function inCart() {
@@ -228,14 +314,13 @@ function inCart() {
   }
 }
 function increase(id) {
-  
   const productIndex = cart.findIndex((item) => item.id === id);
   cart[productIndex].quantity = Number(cart[productIndex].quantity) + 1;
   cart[productIndex].total =
-  cart[productIndex].quantity * Number(cart[productIndex].price);
+    cart[productIndex].quantity * Number(cart[productIndex].price);
   console.log(cart[productIndex].quantity);
   console.log(cart[productIndex].total);
-  
+  localStorage.setItem("cart", JSON.stringify(cart));
   inCart();
 }
 function decrease(id) {
@@ -247,13 +332,15 @@ function decrease(id) {
   if (cart[productIndex].quantity <= 0) {
     cart.splice(productIndex, 1);
   }
+  localStorage.setItem("cart", JSON.stringify(cart));
   inCart();
 }
-  function removeFromCart(id) {
-    cart = cart.filter((item) => item.id != id);
-    console.log(cart);
-    inCart();
-  }
+function removeFromCart(id) {
+  cart = cart.filter((item) => item.id != id);
+  console.log(cart);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  inCart();
+}
 
 // $(".remove").on("click", function () {
 //   const product = JSON.parse($(this).attr("data-product"));

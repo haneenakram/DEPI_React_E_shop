@@ -22,6 +22,11 @@ h5 {
 .mh-90 {
   max-height: 90%;
 }
+.feedback {
+  /* display: none; */
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
 #side-bar-categoris {
   height: 70vh !important;
   overflow-y: auto !important;

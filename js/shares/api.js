@@ -15,10 +15,11 @@ export default async function handelRemoteRequest(
 ) {
   startLoading(); //4th param
   try {
-    const res = await fetch(`${base_url}${endpoint}`);//first param
+    const res = await fetch(`${base_url}${endpoint}`); //first param
     if (res.ok) {
       const data = await res.json();
       success(data); //second parameter
+      return data; // return the data object
     } else {
       throw new Error("something went wrong");
     }
