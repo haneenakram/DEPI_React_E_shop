@@ -9,8 +9,22 @@ const errorProducts = $("#error-products");
 const mainElement = $("#main-content");
 const itemsElement = $("#items");
 const feedback = document.querySelector(".feedback");
+const total = $("#total");
+var cnt = Number(JSON.parse(localStorage.getItem("total"))) || 0;
 var cart = JSON.parse(localStorage.getItem("cart")) || [];
-console.log(cart);
+// console.log(cart);
+// calctotal();
+function calctotal() {
+  cnt = 0;
+  if (cart.length >= 0) {
+    for (let i = 0; i < cart.length; i++) {
+      cnt += cart[i].total;
+    }
+    cnt = Number(cnt.toFixed(2));
+    console.log(cnt);
+  } else cnt = 0;
+  total.html(`${cnt} $`);
+}
 
 function showFeedback() {
   // const feedback = document.querySelector(".feedback"); // Define the feedback variable
@@ -250,6 +264,9 @@ function addTocart(product) {
     showFeedback();
   }
   localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("total", JSON.stringify(cnt));
+
+  calctotal();
   inCart();
 }
 function inCart() {
@@ -259,10 +276,11 @@ function inCart() {
     $("#items-count").html(`${cart.length}`);
     $(".no-items").addClass("d-none");
     $("#cart-body").removeClass("d-none");
+    $(".cart-checkout").removeClass("d-none");
     $("#cart-body").html(
       cart
         .map((item) => {
-          console.log(item);
+          // console.log(item);
           return `
       <div
               class="d-flex border m-2 p-1 position-relative justify-content-around align-items-center">
@@ -310,6 +328,7 @@ function inCart() {
   } else {
     $("#items-count").addClass("d-none");
     $("#cart-body").addClass("d-none");
+    $(".cart-checkout").addClass("d-none");
     $(".no-items").removeClass("d-none");
   }
 }
@@ -321,6 +340,9 @@ function increase(id) {
   console.log(cart[productIndex].quantity);
   console.log(cart[productIndex].total);
   localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("total", JSON.stringify(cnt));
+
+  calctotal();
   inCart();
 }
 function decrease(id) {
@@ -333,12 +355,15 @@ function decrease(id) {
     cart.splice(productIndex, 1);
   }
   localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("total", JSON.stringify(cnt));
+  calctotal();
   inCart();
 }
 function removeFromCart(id) {
   cart = cart.filter((item) => item.id != id);
   console.log(cart);
   localStorage.setItem("cart", JSON.stringify(cart));
+  calctotal();
   inCart();
 }
 
